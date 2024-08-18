@@ -5,8 +5,8 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const cartRoutes = require('./routes/cart');
 const getCartCount = require('./routes/cartCount');
-import cors from 'cors';
-import path from 'path';
+const cors = require('cors');
+const path = require('path');
 
 
 const _dirname = path.resolve()
