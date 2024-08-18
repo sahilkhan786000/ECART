@@ -27,7 +27,7 @@ export default function Header() {
     if (userEmail) {
       const fetchCartCount = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/cart/countCart?email=${userEmail}`);
+          const response = await fetch(`https://ecart-wybs.onrender.com/cart/countCart?email=${userEmail}`);
           const data = await response.json();
           setCartCount(data.count);
         } catch (error) {

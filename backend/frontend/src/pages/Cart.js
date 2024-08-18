@@ -13,7 +13,7 @@ const Cart = () => {
           throw new Error("User email not found in localStorage");
         }
 
-        const response = await fetch(`http://localhost:5000/cart/getCart?email=${email}`);
+        const response = await fetch(`https://ecart-wybs.onrender.com/cart/getCart?email=${email}`);
         const data = await response.json();
 
         if (!Array.isArray(data)) {
@@ -53,7 +53,7 @@ const Cart = () => {
   const removeItem = async (productTitle) => {
     try {
       const email = localStorage.getItem('userEmail');
-      const response = await fetch(`http://localhost:5000/cart/deleteItem`, {
+      const response = await fetch(`https://ecart-wybs.onrender.com/cart/deleteItem`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const Cart = () => {
   const clearCart = async () => {
     try {
       const email = localStorage.getItem('userEmail');
-      const response = await fetch(`http://localhost:5000/cart/deleteAll`, {
+      const response = await fetch(`https://ecart-wybs.onrender.com/cart/deleteAll`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
