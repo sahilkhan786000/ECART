@@ -51,7 +51,7 @@ const ProductList = ({ addToCart }) => {
     const { id: productId, image, title, price } = product;
     const quantity = 1; // Default quantity for new items added to the cart
 
-    fetch('https://ecart-wybs.onrender.com/cart/addCart', {
+    fetch('http://localhost:5000/cart/addItem', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
