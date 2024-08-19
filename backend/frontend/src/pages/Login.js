@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://ecart-wybs.onrender.com/auth/login', {
+      const response = await fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,10 +28,12 @@ const Login = () => {
         // Save the token and email in localStorage
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('userEmail', data.email);
+        localStorage.setItem('userName', data.name);
         
         console.log('Login successful!');
         console.log('User email:', data.email);
         console.log('Auth token:', data.token);
+        console.log('User Name :' , data.name);
 
         // Redirect to home page
         navigate('/home');
