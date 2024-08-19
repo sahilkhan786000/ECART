@@ -13,7 +13,7 @@ const Cart = () => {
           throw new Error("User email not found in localStorage");
         }
 
-        const response = await fetch(`http://localhost:5000/cart/getItems?email=${email}`);
+        const response = await fetch(`https://ecart-wybs.onrender.com/cart/getItems?email=${email}`);
         const data = await response.json();
 
         if (!Array.isArray(data)) {
@@ -37,6 +37,107 @@ const Cart = () => {
 
     fetchCartItems();
   }, []);
+
+   const addItem = async (product) => {
+    try {
+      const email = localStorage.getItem('userEmail');
+      const { productId, image, title, price } = product;
+
+      const response = await fetch(`http://localhost:5000/cart/addItem`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, productId, image, title, price, quantity: 1 }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add item");
+      }
+
+      setCartItems((prevItems) =>
+        prevItems.map((item) =>
+          item.productId === productId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } catch (error) {
+      console.error('Error adding item:', error);
+    }
+  };
+
+  const deleteItem = async (productTitle) => {
+    try {
+      const email = localStorage.getItem('userEmail');
+      const response = await fetch(`https://ecart-wybs.onrender.com/cart/deleteItem`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, productTitle }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete item");
+      }
+
+      setCartItems((prevItems) =>
+        prevItems.map((item) =>
+          item.title === productTitle
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        ).filter(item => item.quantity > 0)
+      );
+    } catch (error) {
+      console.error('Error removing item:', error);
+    }
+  };
+
+  const removeItems = async (productTitle) => {
+    try {
+      const email = localStorage.getItem('userEmail');
+      const response = await fetch(`https://ecart-wybs.onrender.com/cart/deleteItems`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, productTitle }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete item");
+      }
+
+      setCartItems((prevItems) =>
+        prevItems.filter((item) => item.title !== productTitle)
+      );
+    } catch (error) {
+      console.error('Error removing item:', error);
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      const email = localStorage.getItem('userEmail');
+      const response = await fetch(`https://ecart-wybs.onrender.com/cart/emptyCart`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to clear the cart");
+      }
+
+      setCartItems([]);
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+    }
+  };
+
 
   // Function to calculate the discount amount in monetary value
   const calculateDiscountAmount = (price, discountPercent) => {
@@ -63,33 +164,7 @@ const Cart = () => {
     return subtotal - totalDiscount;
   };
 
-  // Add item to cart (for demo purposes)
-  const addItem = (title) => {
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.title === title ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  // Decrease item quantity in cart (for demo purposes)
-  const deleteItem = (title) => {
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.title === title && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
-      )
-    );
-  };
-
-  // Remove all quantities of an item from the cart
-  const removeItems = (title) => {
-    setCartItems(prevItems => prevItems.filter(item => item.title !== title));
-  };
-
-  // Clear the entire cart
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -125,7 +200,7 @@ const Cart = () => {
                   <span className="mx-2">{item.quantity}</span>
                   <button
                     className="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
-                    onClick={() => addItem(item.title)}
+                    onClick={() => addItem(item)}
                   >
                     +
                   </button>
