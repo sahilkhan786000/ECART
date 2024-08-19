@@ -6,7 +6,7 @@ const { ObjectId } = mongoose.Types; // Import ObjectId
 
 
 // get cart count
-router.get('/countCart', async (req, res) => {
+router.get('/countItems', async (req, res) => {
   console.log('GET /cart request received');
   try {
     const { email } = req.query;
