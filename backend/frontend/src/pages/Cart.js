@@ -43,7 +43,7 @@ const Cart = () => {
       const email = localStorage.getItem('userEmail');
       const { productId, image, title, price } = product;
 
-      const response = await fetch(`http://localhost:5000/cart/addItem`, {
+      const response = await fetch(`https://ecart-wybs.onrender.com/cart/addItem`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
