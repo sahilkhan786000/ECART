@@ -140,7 +140,7 @@ router.delete('/deleteItems', async (req, res) => {
 });
 
 // Delete all cart items for a user by email
-router.delete('/deleteAll', async (req, res) => {
+router.delete('/emptyCart', async (req, res) => {
   try {
     const { email } = req.body;
 
