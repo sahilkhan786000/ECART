@@ -23,7 +23,7 @@ const Signup = () => {
     setLoading(true);
   
     try {
-      const response = await fetch('https://ecart-wybs.onrender.com/auth/register', {
+      const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,12 +36,6 @@ const Signup = () => {
   
       if (response.ok) {
         if (data.message === 'User registered successfully') {
-          // Save user name to localStorage
-          localStorage.setItem('userName', name);
-  
-          // Optionally, you can also store email or any other info in localStorage
-          localStorage.setItem('userEmail', email);
-  
           navigate('/');  // Redirect to home if successful
         } else {
           setError('Failed to sign up');
