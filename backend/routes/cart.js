@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Types; // Import ObjectId
 
 // Add item to cart
-router.post('/addCart', async (req, res) => {
+router.post('/addItem', async (req, res) => {
   try {
     const { email, productId, image, title, price, quantity } = req.body;
 
@@ -43,7 +43,7 @@ router.post('/addCart', async (req, res) => {
 });
 
 // Get cart items by email
-router.get('/getCart', async (req, res) => {
+router.get('/getItems', async (req, res) => {
   console.log('GET /cart request received');
   try {
     const { email } = req.query;
@@ -65,8 +65,54 @@ router.get('/getCart', async (req, res) => {
   }
 });
 
-// Delete an individual cart item by email and product title
+
+
+// Delete cart item by email and product title
+// Delete a single quantity of a cart item by email and product title
 router.delete('/deleteItem', async (req, res) => {
+  try {
+    const { email, productTitle } = req.body;
+
+    if (!email || !productTitle) {
+      return res.status(400).json({ error: 'Email and productTitle are required' });
+    }
+
+    // Find the user's cart
+    let cart = await Cart.findOne({ userEmail: email });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    // Find the item with the matching title
+    const itemIndex = cart.items.findIndex(item => item.title === productTitle);
+
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: 'Item not found in cart' });
+    }
+
+    // Reduce the quantity by 1
+    cart.items[itemIndex].quantity -= 1;
+
+    // If quantity becomes 0, remove the item
+    if (cart.items[itemIndex].quantity <= 0) {
+      cart.items.splice(itemIndex, 1); // Remove the item from the array
+    }
+
+    await cart.save();
+
+    res.json({ message: 'Item updated successfully', cart });
+  } catch (error) {
+    console.error('Server error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+
+// Delete all same cart item by email and product title
+router.delete('/deleteItems', async (req, res) => {
   try {
     const { email, productTitle } = req.body;
 
